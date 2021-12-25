@@ -1,11 +1,5 @@
 
 // *********************************************************************
-// ToDo set alle Variablen
-// tiefenschaerfe
-// Anzahl Bilder in Schärfe
-// Bewegungsabstand zw. Bildern
-// Mikroschritte
-// Schrittgroesse
 //
 // schaerfentiefe = 2 * faktor * Blende * (massstab+1)/(massstab*massstab) (in mm)
 // stackschritt = schaerfentiefe / Anzahl der Bilder in schaerfentiefe (in mm)
@@ -21,7 +15,7 @@ float theoretStepGroesse = 0;
 float microstepExponent = 0;
 float realeMicrosteps = 0;
 float realeStepGroesse = 0;
-float realeAnzahlproStackschritt = 0;
+
 
 
 float faktor = 0.02;
@@ -40,7 +34,7 @@ void mFunc_calcStackParm(uint8_t param)
     g_schaerfentiefe_value = 0;
 
     // Disable the screensaver for this function until it is closed
-    LCDML.FUNC_disableScreensaver();
+   // LCDML.FUNC_disableScreensaver();
 
     g_schaerfentiefe_value = 2 * faktor * g_blende_value * ((g_massstab_value + 1) / (g_massstab_value * g_massstab_value));
     stackschritt = g_schaerfentiefe_value / anzahlBilderInSchaerfentiefe ;

@@ -20,7 +20,7 @@ void mFunc_massstab(uint8_t param)
 
 
     // Disable the screensaver for this function until it is closed
-    LCDML.FUNC_disableScreensaver();
+   //  LCDML.FUNC_disableScreensaver();
 
   }
 

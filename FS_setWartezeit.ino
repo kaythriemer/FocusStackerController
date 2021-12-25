@@ -1,7 +1,6 @@
 
 
 // *********************************************************************
-int g_wartezeit_value = 0; // Wartezeit in s value counter (global variable)
 void mFunc_wartezeit(uint8_t param)
 // *********************************************************************
 {
@@ -20,7 +19,7 @@ void mFunc_wartezeit(uint8_t param)
     g_wartezeit_value = 1;
 
     // Disable the screensaver for this function until it is closed
-    LCDML.FUNC_disableScreensaver();
+   //  LCDML.FUNC_disableScreensaver();
 
   }
 

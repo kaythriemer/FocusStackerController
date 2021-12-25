@@ -20,7 +20,7 @@ void mFunc_blende(uint8_t param)
     i_blende = 0;
 
     // Disable the screensaver for this function until it is closed
-    LCDML.FUNC_disableScreensaver();
+    // LCDML.FUNC_disableScreensaver();
 
   }
 

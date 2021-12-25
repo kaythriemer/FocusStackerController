@@ -27,7 +27,7 @@ void mFunc_manualDrive(uint8_t param)
     lcd.print(F("Position: "));
 
     // Disable the screensaver for this function until it is closed
-    LCDML.FUNC_disableScreensaver();
+   // LCDML.FUNC_disableScreensaver();
 
     driver.microsteps(g_microstep_value);
     stepper.setMaxSpeed(max_speed);

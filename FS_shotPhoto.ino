@@ -10,13 +10,13 @@ long warte = g_wartezeit_value * 1000;
   
   
   delay(warte);
-  digitalWrite(focusPin, HIGH);
-  delay(50);
-  digitalWrite(shutterPin, HIGH);
+  digitalWrite(FOCUS_PIN, HIGH);
   delay(100);
-  digitalWrite(focusPin, LOW);
-  delay(10);
-  digitalWrite(shutterPin, LOW);
+  digitalWrite(SHUTTER_PIN, HIGH);
+  delay(300);
+  digitalWrite(SHUTTER_PIN, LOW);
+  delay(100);
+  digitalWrite(FOCUS_PIN, LOW);
 
 
 

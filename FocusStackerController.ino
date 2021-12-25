@@ -17,8 +17,9 @@
 
 #define DEBUG 1
 
-#define shutterPin 30
-#define focusPin   34
+#define SHUTTER_PIN 34
+#define FOCUS_PIN 30
+
 
 // *********************************************************************
 // includes
@@ -26,6 +27,7 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <LCDMenuLib2.h>
+#include<TaskScheduler.h>
 
 // *********************************************************************
 // LCDML display settings
@@ -95,10 +97,13 @@ constexpr uint32_t current = 1000;
 long g_start_value = 0; // blende value counter (global variable)
 long g_end_value = 0; // end Position value  (global variable)
 
+float realeAnzahlproStackschritt = 0;
+
 long g_bildanzahl_value = 0; // bildanzahl value counter (global variable)
 long bild_count = 0;
 long distanz = 0;
 
+int g_wartezeit_value = 0;
 // *********************************************************************
 // Objects
 // *********************************************************************
@@ -122,25 +127,21 @@ LCDML_add         (1  , LCDML_0         , 2  , "Settings"         , NULL);      
 LCDML_add         (2  , LCDML_0_2       , 1  , "Massstab"         , mFunc_massstab);          // this menu function can be found on "LCDML_display_menuFunction" tab
 LCDML_add         (3  , LCDML_0_2       , 2  , "Blende"           , mFunc_blende);            // this menu function can be found on "LCDML_display_menuFunction" tab
 LCDML_add         (4  , LCDML_0_2       , 3  , "Wartezeit"        , mFunc_wartezeit);         // this menu function can be found on "LCDML_display_menuFunction" tab
-LCDML_add         (5  , LCDML_0_2       , 4  , "Microstep"        , mFunc_microstep);
 
-LCDML_add         (6  , LCDML_0         , 3  , "Calc Stack Param" , mFunc_calcStackParm);
+LCDML_add         (5  , LCDML_0         , 3  , "Calc Stack Param" , mFunc_calcStackParm);
 
-LCDML_add         (7  , LCDML_0         , 4  , "Start/End Pos"    , NULL);
-LCDML_add         (8  , LCDML_0_4       , 1  , "Set Start Pos"    , mFunc_setStartPosition);
-LCDML_add         (9  , LCDML_0_4       , 2  , "Set End Pos"    , mFunc_setEndPosition);
+LCDML_add         (6  , LCDML_0         , 4  , "Start/End Pos"    , NULL);
+LCDML_add         (7  , LCDML_0_4       , 1  , "Set Start Pos"    , mFunc_setStartPosition);
+LCDML_add         (8  , LCDML_0_4       , 2  , "Set End Pos"    , mFunc_setEndPosition);
 
-LCDML_add         (10  , LCDML_0         , 5  , "Start Sequence"    , mFunc_startSequence);
-
-
-LCDML_add         (11  , LCDML_0         , 6  , "Motor Test"    , mFunc_motorTest);
+LCDML_add         (9  , LCDML_0         , 5  , "Start Sequence"    , mFunc_startSequence);
 
 
 // ***TIP*** Try to update _LCDML_DISP_cnt when you add a menu element.
 
 // menu element count - last element id
 // this value must be the same as the last menu element
-#define _LCDML_DISP_cnt    11
+#define _LCDML_DISP_cnt    9
 
 // create menu
 LCDML_createMenu(_LCDML_DISP_cnt);
@@ -195,12 +196,25 @@ AccelStepper stepper = AccelStepper(stepper.DRIVER, STEP_PIN, DIR_PIN);
 // *********************************************************************
 // SETUP
 // *********************************************************************
+
+// prototypes
+void runDisplayLoop();
+void runStepperLoop();
+void runSequence();
+
+Scheduler scheduler;
+
+Task menuTask(0, TASK_FOREVER, &runDisplayLoop, &scheduler);
+Task stepperTask(0, TASK_FOREVER, &runStepperLoop, &scheduler);
+Task runSequenceTask(0, TASK_FOREVER, &runSequence, &scheduler);
+
 void setup()
 {
   // serial init; only be needed if serial control is used
   Serial.begin(9600);                // start serial
   Serial.println(F(_LCDML_VERSION)); // only for examples
-
+  menuTask.enable();
+  stepperTask.enable();
   // LCD Begin
   lcd.init();
   lcd.backlight();
@@ -223,7 +237,7 @@ void setup()
   LCDML.MENU_enRollover();
 
   // Enable Screensaver (screensaver menu function, time to activate in ms)
-  LCDML.SCREEN_enable(mFunc_screensaver, 10000); // set to 10 seconds
+  // LCDML.SCREEN_enable(mFunc_screensaver, 10000); // set to 10 seconds
   //LCDML.SCREEN_disable();
 
   // Some needful methods
@@ -256,12 +270,15 @@ void setup()
   // init
   g_blende_value = blenden[0];
   i_blende = 0;
-  // Reset Microstep Value
   g_microstep_value = TMCmicrosteps[0];
   i_step = 0;
-  // Reset Button Value
   g_massstab_value = massstab[0];
   i_massstab = 0;
+  g_wartezeit_value = 1;
+
+
+  pinMode(FOCUS_PIN, OUTPUT);
+  pinMode(SHUTTER_PIN, OUTPUT);
 }
 
 // *********************************************************************
@@ -269,6 +286,5 @@ void setup()
 // *********************************************************************
 void loop()
 {
-  LCDML.loop();
-  stepper.run();
+  scheduler.execute();
 }
