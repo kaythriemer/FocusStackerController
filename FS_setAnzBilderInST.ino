@@ -1,9 +1,7 @@
 
 
 // *********************************************************************
-// float g_massstab_value = 0; // massstab value counter (global variable)
-
-void mFunc_massstab(uint8_t param)
+void mFunc_anzBilderInST(uint8_t param)
 // *********************************************************************
 {
   if (LCDML.FUNC_setup())         // ****** SETUP *********
@@ -16,8 +14,9 @@ void mFunc_massstab(uint8_t param)
     lcd.setCursor(0, 0);
     lcd.print(F("press up or down"));
     lcd.setCursor(0, 1);
-    lcd.print(F("Massstab:"));
-
+    lcd.print(F("Anzahl Bilder in ST"));
+    // Reset Button Value
+    g_anzahlbilderinST_value = 1;
 
     // Disable the screensaver for this function until it is closed
    //  LCDML.FUNC_disableScreensaver();
@@ -31,30 +30,28 @@ void mFunc_massstab(uint8_t param)
     if (LCDML.BT_checkUp()) // check if button UP is pressed
     {
       LCDML.BT_resetUp(); // reset the left button
-      i_massstab++;
+      g_anzahlbilderinST_value++;
     }
     if (LCDML.BT_checkDown()) // check if button DOWN is pressed
     {
       LCDML.BT_resetDown(); // reset the left button
-      i_massstab--;
+      g_anzahlbilderinST_value--;
     }
 
-    if (i_massstab < 0)
+    if (g_anzahlbilderinST_value < 3)
     {
-      i_massstab = 27;
+      g_anzahlbilderinST_value = 6;
     }
-    if (i_massstab > 27)
+    if (g_anzahlbilderinST_value > 6)
     {
-      i_massstab = 0;
+      g_anzahlbilderinST_value = 3;
     }
-
-    g_massstab_value = massstab[i_massstab];
 
     // update LCD content
-    lcd.setCursor(10, 1); // set cursor
-    lcd.print("                   ");
-    lcd.setCursor(10, 1); // set cursor
-    lcd.print(s_massstab [i_massstab]); // print change content
+    lcd.setCursor(1, 2); // set cursor
+    lcd.print("       ");
+    lcd.setCursor(1, 2); // set cursor
+    lcd.print(g_anzahlbilderinST_value); // print change content
 
 
     // check if enter button is pressed

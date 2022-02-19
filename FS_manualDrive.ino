@@ -42,13 +42,13 @@ void mFunc_manualDrive(uint8_t param)
     if (LCDML.BT_checkLeft()) // check if button LEFT is pressed
     {
       LCDML.BT_resetLeft(); // reset the left button
-      g_position_value++;
+      g_position_value+=40;
     }
 
     if (LCDML.BT_checkRight()) // check if button Right is pressed
     {
       LCDML.BT_resetRight(); // reset the Right button
-      g_position_value--;
+      g_position_value-=40;
     }
 
 

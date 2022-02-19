@@ -17,8 +17,9 @@
 
 #define DEBUG 1
 
-#define SHUTTER_PIN 34
 #define FOCUS_PIN 30
+#define SHUTTER_PIN 34
+
 
 
 // *********************************************************************
@@ -74,8 +75,8 @@ long  stored_position = 0; // fuer Anzeige
 float blenden [28] = {1.4, 1.6, 1.8, 2, 2.2, 2.5, 2.8, 3.2, 3.5, 4, 4.5 , 5 , 5.6, 6.3, 7.1, 8, 9, 10, 11, 13, 14, 16, 18, 20, 22, 25, 29, 32};
 int i_blende = 0;
 
-String s_massstab [18] = {"1:5", "1:4", "1:3", "1:2", "1:1", "1,5:1", "2:1", "2,5:1", "3:1", "3,5:1", "4:1", "4,5:1", "5:1",  "6:1", "7:1", "8:1", "9:1", "10:1"};
-float    massstab [18] = { 0.2 ,  0.25,  0.33,  0.5 ,  1   ,  1.5   ,  2   ,  2.5   ,  3   ,  3.5   ,  4   ,  4.5   ,  5   ,   6   ,  7   ,  8   ,  9   ,  10   };
+String s_massstab [28] = {"1:5", "1:4", "1:3", "1:2", "1:1", "1,5:1", "2:1", "2,5:1", "3:1", "3,5:1", "4:1", "4,5:1", "5:1",  "6:1", "7:1", "8:1", "9:1", "10:1", "11:1", "12:1", "13:1", "14:1", "15:1", "16:1", "17:1", "18:1", "19:1", "20:1"};
+float    massstab [28] = { 0.2 ,  0.25,  0.33,  0.5 ,  1   ,  1.5   ,  2   ,  2.5   ,  3   ,  3.5   ,  4   ,  4.5   ,  5   ,   6   ,  7   ,  8   ,  9   ,  10   ,  11   ,  12   ,  13   ,  14   ,  15   ,  16   ,  17   ,  18   ,  19   ,  20   };
 int i_massstab = 0;
 
 uint32_t g_microstep_value = 0; // microstep value counter (global variable)
@@ -91,7 +92,7 @@ uint32_t steps_per_mm = 0;
 uint32_t um_per_step = 0;
 uint32_t max_speed = 800;
 
-constexpr uint32_t acceleration = 500;
+constexpr uint32_t acceleration = 400;
 constexpr uint32_t current = 1000;
 
 long g_start_value = 0; // blende value counter (global variable)
@@ -104,6 +105,7 @@ long bild_count = 0;
 long distanz = 0;
 
 int g_wartezeit_value = 0;
+int g_anzahlbilderinST_value = 0;
 // *********************************************************************
 // Objects
 // *********************************************************************
@@ -127,21 +129,22 @@ LCDML_add         (1  , LCDML_0         , 2  , "Settings"         , NULL);      
 LCDML_add         (2  , LCDML_0_2       , 1  , "Massstab"         , mFunc_massstab);          // this menu function can be found on "LCDML_display_menuFunction" tab
 LCDML_add         (3  , LCDML_0_2       , 2  , "Blende"           , mFunc_blende);            // this menu function can be found on "LCDML_display_menuFunction" tab
 LCDML_add         (4  , LCDML_0_2       , 3  , "Wartezeit"        , mFunc_wartezeit);         // this menu function can be found on "LCDML_display_menuFunction" tab
+LCDML_add         (5  , LCDML_0_2       , 4  , "Anz Bilder in ST" , mFunc_anzBilderInST); 
 
-LCDML_add         (5  , LCDML_0         , 3  , "Calc Stack Param" , mFunc_calcStackParm);
+LCDML_add         (6  , LCDML_0         , 3  , "Calc Stack Param" , mFunc_calcStackParm);
 
-LCDML_add         (6  , LCDML_0         , 4  , "Start/End Pos"    , NULL);
-LCDML_add         (7  , LCDML_0_4       , 1  , "Set Start Pos"    , mFunc_setStartPosition);
-LCDML_add         (8  , LCDML_0_4       , 2  , "Set End Pos"    , mFunc_setEndPosition);
+LCDML_add         (7  , LCDML_0         , 4  , "Start/End Pos"    , NULL);
+LCDML_add         (8  , LCDML_0_4       , 1  , "Set Start Pos"    , mFunc_setStartPosition);
+LCDML_add         (9  , LCDML_0_4       , 2  , "Set End Pos"    , mFunc_setEndPosition);
 
-LCDML_add         (9  , LCDML_0         , 5  , "Start Sequence"    , mFunc_startSequence);
+LCDML_add         (10  , LCDML_0         , 5  , "Start Sequence"    , mFunc_startSequence);
 
 
 // ***TIP*** Try to update _LCDML_DISP_cnt when you add a menu element.
 
 // menu element count - last element id
 // this value must be the same as the last menu element
-#define _LCDML_DISP_cnt    9
+#define _LCDML_DISP_cnt    10
 
 // create menu
 LCDML_createMenu(_LCDML_DISP_cnt);
@@ -275,6 +278,7 @@ void setup()
   g_massstab_value = massstab[0];
   i_massstab = 0;
   g_wartezeit_value = 1;
+  g_anzahlbilderinST_value = 6;
 
 
   pinMode(FOCUS_PIN, OUTPUT);

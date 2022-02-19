@@ -63,9 +63,9 @@ void runSequence() {
       lcd.print(bild_count);
       lcd.setCursor(16, 0);
       lcd.print(g_bildanzahl_value);
-      lcd.setCursor(10, 1);
+      lcd.setCursor(0, 2);
       lcd.print(stepper.currentPosition());
-      lcd.setCursor(16, 1);
+      lcd.setCursor(10, 2);
       lcd.print(g_end_value);
       if (DEBUG) {
         Serial.println("Bild 0 ");
@@ -114,13 +114,13 @@ void runSequence() {
     lcd.setCursor(16, 0);
     lcd.print(g_bildanzahl_value);
 
-    lcd.setCursor(10, 1); // set cursor
-    lcd.print("      ");
+    lcd.setCursor(0, 2); // set cursor
+    lcd.print("         ");
 
-    lcd.setCursor(10, 1);
+    lcd.setCursor(0, 2);
     lcd.print(stepper.currentPosition());
 
-    lcd.setCursor(16, 1);
+    lcd.setCursor(10, 2);
     lcd.print(g_end_value);
     if (DEBUG) {
       Serial.print("Aktuelle Position: ");

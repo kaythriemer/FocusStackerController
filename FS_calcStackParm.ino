@@ -9,7 +9,6 @@
 
 float g_schaerfentiefe_value = 0; // schaerfentiefe value counter (global variable)
 float stackschritt = 0;
-int anzahlBilderInSchaerfentiefe = 4;  // Todo Variable ?
 int anzahlStepsProStackschritt = 10;  // Todo Variable ?
 float theoretStepGroesse = 0;
 float microstepExponent = 0;
@@ -37,7 +36,7 @@ void mFunc_calcStackParm(uint8_t param)
    // LCDML.FUNC_disableScreensaver();
 
     g_schaerfentiefe_value = 2 * faktor * g_blende_value * ((g_massstab_value + 1) / (g_massstab_value * g_massstab_value));
-    stackschritt = g_schaerfentiefe_value / anzahlBilderInSchaerfentiefe ;
+    stackschritt = g_schaerfentiefe_value / g_anzahlbilderinST_value ;
     theoretStepGroesse = stackschritt / anzahlStepsProStackschritt * 1000;
     microstepExponent = ceil(log(vollschrittgroesse / theoretStepGroesse) / log(2.0));
 
@@ -73,7 +72,7 @@ void mFunc_calcStackParm(uint8_t param)
 
       Serial.println("-------------------------");
       Serial.print("Anzahl Bilder in ST: ");
-      Serial.println(anzahlBilderInSchaerfentiefe);
+      Serial.println(g_anzahlbilderinST_value);
       Serial.print("Stackschritt: ");
       Serial.println(stackschritt, 6);
       Serial.println("-------------------------");
