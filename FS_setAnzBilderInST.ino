@@ -15,8 +15,7 @@ void mFunc_anzBilderInST(uint8_t param)
     lcd.print(F("press up or down"));
     lcd.setCursor(0, 1);
     lcd.print(F("Anzahl Bilder in ST"));
-    // Reset Button Value
-    g_anzahlbilderinST_value = 1;
+
 
     // Disable the screensaver for this function until it is closed
    //  LCDML.FUNC_disableScreensaver();

@@ -15,8 +15,7 @@ void mFunc_wartezeit(uint8_t param)
     lcd.print(F("press up or down"));
     lcd.setCursor(0, 1);
     lcd.print(F("Wartezeit(s): "));
-    // Reset Button Value
-    g_wartezeit_value = 1;
+
 
     // Disable the screensaver for this function until it is closed
    //  LCDML.FUNC_disableScreensaver();

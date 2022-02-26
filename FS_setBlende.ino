@@ -15,9 +15,6 @@ void mFunc_blende(uint8_t param)
     lcd.print(F("press up or down"));
     lcd.setCursor(0, 1);
     lcd.print(F("Blende: "));
-    // Reset Button Value
-    g_blende_value = blenden[0];
-    i_blende = 0;
 
     // Disable the screensaver for this function until it is closed
     // LCDML.FUNC_disableScreensaver();
